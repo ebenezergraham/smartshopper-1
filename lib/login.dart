@@ -9,6 +9,7 @@ import 'package:smartshopper/contact.dart';
 import 'package:smartshopper/my_profile.dart';
 import 'package:smartshopper/stores.dart';
 import 'package:smartshopper/settings.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = new GoogleSignIn();
@@ -143,6 +144,17 @@ class _MyHomePageState extends State<MyHomePage> {
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }
 
+  Future toast(String message) async {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        bgcolor: "#e74c3c",
+        textcolor: '#ffffff'
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -163,6 +175,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
+                    Container(
+                      width: 50.0,
+                      height: 50.0,
+                      child: new FittedBox(
+                        fit: BoxFit.fill, // otherwise the logo will be tiny
+                        child: const FlutterLogo(),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 150.0),
+                    ),
                     Container(
                       width: 320.0,
                       height: 42.0,
@@ -187,6 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ],
                           ),
                           onPressed: () {
+                            toast("Verifying...");
                             _message = _loginWithFacebook();
                           }),
                     ),
@@ -218,6 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           onPressed: () {
                             setState(() {
+                              toast("Verifying...");
                               _message = _testSignInWithGoogle();
                             });
                           }),
@@ -280,6 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                                 //elevation: 4.0,
                                 onPressed: () {
+                                  toast("Verifying...");
                                   if (_phoneNoController.text != null) {
                                     this.testPhoneNumber =
                                         _phoneNoController.text;
