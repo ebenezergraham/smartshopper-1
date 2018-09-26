@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smartshopper/login.dart';
 import 'package:smartshopper/splash_screen.dart';
+import 'package:smartshopper/cart.dart';
 import 'package:smartshopper/homepage.dart';
+
 
 void main() => runApp(SmartShopper());
 
@@ -10,6 +12,7 @@ class SmartShopper extends StatelessWidget {
     '/splashScreen': (BuildContext context) => new SplashScreen(),
     '/homepage': (BuildContext context) => new MyHomepage(),
     '/login': (BuildContext context) => new MyApp(),
+    '/cart': (BuildContext context) => new Cart(),
   };
 
   @override
