@@ -10,7 +10,6 @@ import 'package:smartshopper/my_profile.dart';
 import 'package:smartshopper/stores.dart';
 import 'package:smartshopper/settings.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:smartshopper/cart.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = new GoogleSignIn();
@@ -37,7 +36,6 @@ class MyApp extends StatelessWidget {
         '/settings': (BuildContext context) => new Settings(),
         '/contact': (BuildContext context) => new Contact(),
         '/stores': (BuildContext context) => new Stores(),
-        '/cart': (BuildContext context) => new Cart(),
       },
     );
   }
@@ -177,6 +175,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
+                    Container(
+                      width: 50.0,
+                      height: 50.0,
+                      child: new FittedBox(
+                        fit: BoxFit.fill, // otherwise the logo will be tiny
+                        child: const FlutterLogo(),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 150.0),
+                    ),
                     Container(
                       width: 320.0,
                       height: 42.0,

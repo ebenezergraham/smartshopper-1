@@ -12,6 +12,15 @@ class MyHomepage extends StatefulWidget {
 
 class _State extends State<MyHomepage> {
   String barcode = "";
+  int _cartItems = 20;
+  int _qty = 1;
+  TextEditingController _qtyController;
+
+  @override
+  void initState() {
+    super.initState();
+    _qtyController = new TextEditingController(text: '$_qty');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +28,49 @@ class _State extends State<MyHomepage> {
         appBar: new AppBar(
           title: new Text("SmartShopper"),
           actions: <Widget>[
-            IconButton(
-              icon: new Icon(
-                Icons.shopping_cart,
-                color: Colors.yellowAccent,
+            new Container(
+              child: new GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed('/cart');
+                },
+                child: new Stack(
+                  children: <Widget>[
+                    IconButton(
+                      icon: new Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/cart');
+                      },
+                    ),
+                    _cartItems == 0
+                        ? new Container()
+                        : new Positioned(
+                            child: new Stack(
+                            children: <Widget>[
+                              new Icon(
+                                Icons.brightness_1,
+                                size: 20.0,
+                                color: Colors.yellowAccent,
+                              ),
+                              new Positioned(
+                                  top: 3.0,
+                                  right: 4.0,
+                                  child: new Center(
+                                    child: new Text(
+                                      _cartItems.toString(),
+                                      style: new TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 8.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ))
+                            ],
+                          ))
+                  ],
+                ),
               ),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/cart');
-              },
             )
           ],
         ),
@@ -224,35 +268,158 @@ class _State extends State<MyHomepage> {
   }
 
   Future modal() async {
+    this._qty = 1;
+    _qtyController.text = _qty.toString();
     showModalBottomSheet(
         context: context,
         builder: (builder) {
           return new Container(
             color: Colors.redAccent,
-            child: new Center(
-              child: new RaisedButton(
-                  padding: new EdgeInsets.all(15.0),
-                  color: Colors.green,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.code,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        'Add to Cart',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    scan();
-                  }),
+            //padding: EdgeInsets.only(
+            //    left: 20.0, top: 20.0, right: 20.0, bottom: 0.0),
+            child: new Column(
+              children: <Widget>[
+                new Expanded(
+                    flex: 2,
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Item Name and Details',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                        Text(
+                          'Price: ',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        Divider(),
+                        Container(
+                          width: 200.0,
+                          child: new Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              new Expanded(
+                                child: Text(
+                                  'Quantity:',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(right: 5.0),
+                              ),
+                              new Expanded(
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (v) => setState(() {
+                                        if (v != null) {
+                                          _qty = int.tryParse(v);
+                                        } else {
+                                          _qty = 1;
+                                        }
+                                      }),
+                                  controller: _qtyController,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.fromLTRB(
+                                        20.0, 8.0, 20.0, 8.0),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        new ButtonBar(
+                          alignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            new RaisedButton(
+                              onPressed: _removeQuantity,
+                              child:
+                                  new Icon(Icons.remove, color: Colors.black),
+                              color: Colors.white,
+                            ),
+                            new RaisedButton(
+                              onPressed: _addQuantity,
+                              child: new Icon(Icons.add, color: Colors.black),
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
+                Divider(),
+                new Column(
+
+                  children: <Widget>[
+                    new Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        new Expanded(
+                          child: ButtonTheme(
+                            height: 50.0,
+                            child: RaisedButton(
+                              onPressed: _removeQuantity,
+                              child: new Text(
+                                'CANCEL',
+                                style: new TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.white),
+                              ),
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        new Expanded(
+                          child: ButtonTheme(
+                            height: 50.0,
+                            child: RaisedButton(
+                              onPressed: _removeQuantity,
+                              child: new Text(
+                                'ADD TO CART',
+                                style: new TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.white),
+                              ),
+                              color: Colors.green,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              ],
             ),
           );
         });
+  }
+
+  void _addQuantity() {
+    _qty++;
+    print(_qty);
+    _qtyController.text = _qty.toString();
+  }
+
+  void _removeQuantity() {
+    if (_qty > 1) {
+      this._qty--;
+      _qtyController.text = _qty.toString();
+    }
+    print(_qty);
   }
 }
