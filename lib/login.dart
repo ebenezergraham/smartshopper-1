@@ -4,53 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:smartshopper/homepage.dart';
-import 'package:smartshopper/contact.dart';
-import 'package:smartshopper/my_profile.dart';
-import 'package:smartshopper/stores.dart';
-import 'package:smartshopper/settings.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = new GoogleSignIn();
 final FacebookLogin _fbLogin = new FacebookLogin();
 
-void main() {
-  runApp(new MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      //title: 'Firebase Auth Demo',
-      theme: ThemeData(
-          fontFamily: 'OpenSans',
-          primaryColor: Colors.redAccent,
-          accentColor: Colors.yellowAccent),
-      debugShowCheckedModeBanner: false,
-      home: new MyHomePage(title: 'SmartShopper'),
-      routes: <String, WidgetBuilder>{
-        '/homepage': (BuildContext context) => new MyHomepage(),
-        '/profile': (BuildContext context) => new MyProfile(),
-        '/settings': (BuildContext context) => new Settings(),
-        '/contact': (BuildContext context) => new Contact(),
-        '/stores': (BuildContext context) => new Stores(),
-      },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _LoginPageState createState() => new _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginPageState extends State<LoginPage> {
   Future<String> _message = new Future<String>.value('');
   String verificationId;
   String testPhoneNumber; //changed
@@ -146,21 +115,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future toast(String message) async {
     Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        bgcolor: "#e74c3c",
-        textcolor: '#ffffff'
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      bgcolor: "#e74c3c",
+      textcolor: '#ffffff',
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-//      appBar: new AppBar(
-//        title: new Text(widget.title),
-//      ),
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -176,15 +142,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Container(
-                      width: 50.0,
-                      height: 50.0,
-                      child: new FittedBox(
-                        fit: BoxFit.fill, // otherwise the logo will be tiny
-                        child: const FlutterLogo(),
+                      child: Image(
+                        image: AssetImage('lib/assets/logo.png'),
+                        width: 150.0,
+                        height: 150.0,
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 150.0),
+                      padding: EdgeInsets.only(top: 50.0),
                     ),
                     Container(
                       width: 320.0,
@@ -247,9 +212,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             });
                           }),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                    ),
                   ],
                 ),
               ),
@@ -306,6 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 //elevation: 4.0,
                                 onPressed: () {
                                   toast("Verifying...");
+                                  //Navigator.of(context).pushNamed('/homepage');
                                   if (_phoneNoController.text != null) {
                                     this.testPhoneNumber =
                                         _phoneNoController.text;
